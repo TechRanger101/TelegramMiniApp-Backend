@@ -1,0 +1,9 @@
+build/
+node_modules/
+src/models/lonAton.jobs.json
+src/models/lonAton.tasks.json
+.env
+.vscode
+.husky
+yarn.lock
+package-lock.json
