@@ -1,9 +1,13 @@
 import { Request, Response} from "express";
-import {User} from "../models";
+import {User, Task, Job, Agent} from "../models";
 
 export const home = async(req: Request, res: Response) => {
     const user= await User.findOne({_id: req.body.user._id});
-    res.status(200).json(user);
+    const tasks = await Task.find({});
+    const jobs = await Job.find({});
+    const agents = await Agent.find({_id: {$in: req.body.user.agents}});
+    console.log();
+    res.status(200).send({user, tasks, jobs, agents});
 };
 
 export const updateCoins = async(req: Request,res: Response)=> {
@@ -13,11 +17,10 @@ export const updateCoins = async(req: Request,res: Response)=> {
     if(accountAgeInDays<30 && req.body.user.referralUser){
         await User.findByIdAndUpdate({_id: req.body.user.referralUser},{$inc:{referralIncome: Math.floor(req.body.coins/20)}});
     }
-    await User.findByIdAndUpdate({_id: req.body.user._id}, {$inc:{coins: req.body.coins + req.body.user.referralIncome},$set:{levelRate: req.body.levelRate}});
-    res.status(200).send({message: "Success Increase Coin",referralIncome:req.body.user.referralIncome });
-}
+    await User.findByIdAndUpdate({_id: req.body.user._id}, {coins: req.body.coins,levelRate: req.body.levelRate, gpus: req.body.gpus, 
+        data: req.body.data,energy: req.body.energy, power: req.body.power, passiveIncome: req.body.passiveIncome, level: req.body.level
+    }
+    );
 
-export const updateLevel = async(req: Request,res: Response)=> {
-    await User.findByIdAndUpdate({_id: req.body.user._id},{$inc: {level: 1}});
-    res.status(200).send({message: "Succsss Clicks"});
+    res.status(200).send({message: "Success Increase Coin",referralIncome:req.body.user.referralIncome});
 }

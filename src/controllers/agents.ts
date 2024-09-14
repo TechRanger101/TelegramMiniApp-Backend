@@ -15,12 +15,9 @@ export const agentsList = async(req: Request, res: Response) => {
 export const agentCreate = async(req: Request, res: Response) => {
     try{
         if(req.body.user.coins > 100){
-            console.log(req.body.user.coins);
             const agent= new Agent(req.body.newAgent);
             await agent.save();
-            console.log(req.body.user.coins);
             await User.findByIdAndUpdate({_id: req.body.user._id},{$push: {agents: agent._id},$inc: {passiveIncome: 1,coins: -100}});
-            console.log(req.body.user.coins);
             res.status(200).send({message: "Success Created!!!"});
         }
         else {
@@ -34,16 +31,12 @@ export const agentCreate = async(req: Request, res: Response) => {
 
 export const agentsPair = async(req: Request, res: Response)=>{
     try{
-        const agent= new Agent(req.body.mergedAgent);
-        agent.save();
-        await User.findByIdAndUpdate({_id: req.body.user._id},{$pull: {agents: req.body.agents[0]}});
-        await User.findByIdAndUpdate({_id: req.body.user._id},{$pull: {agents: req.body.agents[1]}});
-        await User.findByIdAndUpdate({_id: req.body.user._id},{$push: {agents: agent._id}});
-        await Agent.deleteMany({_id: req.body.agents});
+        const agent= new Agent(req.body.newAgent);
+        await User.findByIdAndUpdate({_id: req.body.user._id},{$pull: {agents: req.body.deleteAgents},$push: {agents: agent._id}});
+        await Agent.deleteMany({_id: req.body.deleteAgents});
         res.status(200).send({message: "Successfully Paired."});
     }
     catch(err){
-        console.log(err)
         res.status(404).send(err);
     }
 }

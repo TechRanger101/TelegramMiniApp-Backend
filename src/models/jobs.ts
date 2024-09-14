@@ -6,9 +6,10 @@ const jobSchema = new Schema({
     employer: { type: String, required: true },  
     description: { type: String, required: true },  
     requiredLevel: { type: Number, required: true, default: 1 },
-    requiredPower: {type: Number, required: true, default: 1},
+    requiredEnergy: {type: Number, required: true, default: 1},
+    requiredTime: {type: Number,required: true, default: 1},
     passiveIncome: { type: Number, required: true, default: 1 },  
-    assignState: { type: Boolean, default: false },  
+    assignTo: { type: String, default: ""},
 });
 
 // Create the model from the schema

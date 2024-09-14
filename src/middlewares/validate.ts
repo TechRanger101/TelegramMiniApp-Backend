@@ -51,7 +51,7 @@ export const signUpValidate = async(req: Request, res: Response, next: NextFunct
 
 export const agentCreateValidate = (req: Request, res: Response, next: NextFunction)=>{
   try{
-    if(req.body.user.agents.length < 20){
+    if(req.body.user.agents.length < 12){
       next();
     }
     else {
@@ -68,12 +68,12 @@ export const agentCreateValidate = (req: Request, res: Response, next: NextFunct
 export const agentPairValidate = async(req: Request, res: Response, next: NextFunction) => {
   try{
     const deleteAgents = req.body.deleteAgents;
+    console.log(deleteAgents);
     if(deleteAgents && deleteAgents.length===2){
       try{
-        const tempAgent1 = await Agent.findOne({agentId: req.body.deleteAgents[0]});
-        const tempAgent2 = await Agent.findOne({agentId: req.body.deleteAgents[1]});
+        const tempAgent1 = await Agent.findOne({_id: req.body.deleteAgents[0]});
+        const tempAgent2 = await Agent.findOne({_id: req.body.deleteAgents[1]});
         if(tempAgent1 && tempAgent2 && tempAgent1.level === tempAgent2.level){
-          req.body.agents = [tempAgent1._id, tempAgent2._id];
           next();
         }
         else{
@@ -208,7 +208,7 @@ export const jobValidate = async(req: Request, res: Response, next: NextFunction
 
 export const agentValidate = async(req: Request, res: Response, next: NextFunction) => {
   try{
-    const agent = await Agent.findOne({_id: req.body.agentId});
+    const agent = await Agent.findOne({agentId: req.body.agentId});
     if(agent){
       req.body.agent = agent;
       next();

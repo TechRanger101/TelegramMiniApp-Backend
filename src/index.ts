@@ -7,7 +7,7 @@ import helmet from 'helmet'
 // import { rateLimit } from 'express-rate-limit'
 import hpp from 'hpp'
 import mongoose from 'mongoose'
-import {airdropRouter, earnRouter, userRouter, authRouter, workForceRouter, agentRouter} from "./routes";
+import {airdropRouter, userRouter, authRouter, workForceRouter, agentRouter} from "./routes";
 
 mongoose.connect(process.env.mongoURI||"").then(()=>{
   console.log("DB connected Successfully.")
@@ -53,7 +53,6 @@ app.use("/", userRouter);
 app.use("/auth",authRouter);
 app.use("/agent",agentRouter);
 app.use("/airdrop",airdropRouter);
-app.use("/earn",earnRouter);
 app.use("/workforce",workForceRouter);
 
 app.use((req, res, next) => {
